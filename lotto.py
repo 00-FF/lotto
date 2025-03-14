@@ -1,12 +1,14 @@
 import random
 
+previous_numbers = [20, 21, 22, 25, 28, 29]
+
 hot_numbers = [1, 12, 27, 34, 43]
 low_numbers = list(range(1, 23))
 high_numbers = list(range(23, 46))
 
 def generate_lotto_numbers():
-    odd_numbers = [num for num in range(1, 46) if num % 2 != 0]
-    even_numbers = [num for num in range(1, 46) if num % 2 == 0]
+    odd_numbers = [num for num in range(1, 46) if num % 2 != 0 and num not in previous_numbers]
+    even_numbers = [num for num in range(1, 46) if num % 2 == 0 and num not in previous_numbers]
     
     odd_selected = random.sample(odd_numbers, 3)
     even_selected = random.sample(even_numbers, 3)
@@ -14,28 +16,28 @@ def generate_lotto_numbers():
     return sorted(odd_selected + even_selected)
 
 def generate_balanced_numbers():
-    low_selected = random.sample(low_numbers, 3)
-    high_selected = random.sample(high_numbers, 3)
+    low_selected = random.sample([num for num in low_numbers if num not in previous_numbers], 3)
+    high_selected = random.sample([num for num in high_numbers if num not in previous_numbers], 3)
     
     return sorted(low_selected + high_selected)
 
 def generate_lotto_with_hot_numbers():
-    selected_numbers = set(random.sample(hot_numbers, 2))
-    remaining_numbers = set(range(1, 46)) - selected_numbers
+    selected_numbers = set(random.sample([num for num in hot_numbers if num not in previous_numbers], 2))
+    remaining_numbers = set(range(1, 46)) - selected_numbers - set(previous_numbers)
     remaining_selected = random.sample(list(remaining_numbers), 4)
     
     return sorted(list(selected_numbers) + remaining_selected)
 
 def generate_combined_lotto():
     used_numbers = set()
-    hot_selected = set(random.sample(hot_numbers, 2))
+    hot_selected = set(random.sample([num for num in hot_numbers if num not in previous_numbers], 2))
     used_numbers.update(hot_selected)
   
-    low_selected = random.sample([num for num in low_numbers if num not in used_numbers], 2)
-    high_selected = random.sample([num for num in high_numbers if num not in used_numbers], 2)
+    low_selected = random.sample([num for num in low_numbers if num not in used_numbers and num not in previous_numbers], 2)
+    high_selected = random.sample([num for num in high_numbers if num not in used_numbers and num not in previous_numbers], 2)
   
-    odd_numbers = [num for num in range(1, 46) if num % 2 != 0 and num not in used_numbers]
-    even_numbers = [num for num in range(1, 46) if num % 2 == 0 and num not in used_numbers]
+    odd_numbers = [num for num in range(1, 46) if num % 2 != 0 and num not in used_numbers and num not in previous_numbers]
+    even_numbers = [num for num in range(1, 46) if num % 2 == 0 and num not in used_numbers and num not in previous_numbers]
   
     odd_selected = random.sample(odd_numbers, 2)
     even_selected = random.sample(even_numbers, 2)
